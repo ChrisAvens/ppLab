@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>excercise01</OriginalElement>
+  <nodes>
+    <node x="-37.03177614593929" y="-179.77820231741003">excercise01.Main</node>
+    <node x="-285.82990819079157" y="-111.31603340228855">excercise01.UsaPessoa</node>
+    <node x="-157.0217564013459" y="37.229797945406006">excercise01.Pessoa</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Compact" zoom="1.301923076923077" showDependencies="false" x="-67.5" y="80.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
