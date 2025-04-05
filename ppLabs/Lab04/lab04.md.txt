@@ -1,0 +1,352 @@
+# Java Functional Interfaces, Streams, and Method References
+
+Welcome to this comprehensive guide on **Functional Interfaces**, **Single Abstract Methods (SAM)**, **Streams**, and **Method References** in Java. This document combines theoretical explanations with practical coding exercises to enhance your understanding and application of these concepts.
+
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Functional Interfaces](#functional-interfaces)
+3. [Single Abstract Method (SAM)](#single-abstract-method-sam)
+4. [Java Streams](#java-streams)
+5. [Method References](#method-references)
+6. [Practical Exercise](#practical-exercise)
+    - [Provided Code Snippets](#provided-code-snippets)
+    - [Student Tasks](#student-tasks)
+7. [Conclusion](#conclusion)
+8. [Further Reading](#further-reading)
+
+---
+
+## Introduction
+
+Java has evolved significantly to incorporate functional programming paradigms, enhancing its expressiveness and efficiency. Core to this evolution are **Functional Interfaces**, **Streams**, and **Method References**, which work in tandem to facilitate concise and readable code.
+
+In this guide, we'll explore these concepts both theoretically and through practical examples, providing you with the knowledge to implement them effectively in your Java applications.
+
+---
+
+## Functional Interfaces
+
+### What is a Functional Interface?
+
+A **Functional Interface** in Java is an interface that has exactly **one abstract method**. These interfaces can be implemented using lambda expressions, method references, or anonymous classes, enabling more succinct and readable code.
+
+### Characteristics
+
+- **Single Abstract Method (SAM):** Contains only one abstract method.
+- **Default and Static Methods:** Can include any number of default and static methods.
+- **Annotation:** Often annotated with `@FunctionalInterface` for clarity and compiler checks.
+
+### Common Functional Interfaces
+
+Java provides several built-in functional interfaces in the `java.util.function` package:
+
+- **`Predicate<T>`:** Represents a boolean-valued function of one argument.
+- **`Function<T, R>`:** Represents a function that accepts one argument and produces a result.
+- **`Consumer<T>`:** Represents an operation that accepts a single input argument and returns no result.
+- **`Supplier<T>`:** Represents a supplier of results.
+
+### Example
+
+```java
+@FunctionalInterface
+public interface FiltroAluno extends Predicate<Aluno> {
+   boolean aceita(Aluno a);
+   @Override
+   default boolean test(Aluno a) {
+      return aceita(a);
+   }
+}
+```
+
+**Explanation:**
+
+- **`FiltroAluno`** is a functional interface extending `Predicate<Aluno>`, allowing it to be used seamlessly with Java Streams.
+- The `aceita` method defines the abstract method, while the `test` method provides a default implementation linking it to `Predicate`.
+
+---
+
+## Single Abstract Method (SAM)
+
+### Definition
+
+The **Single Abstract Method (SAM) principle** states that a functional interface must have exactly one abstract method. This design allows the interface to be implemented by lambda expressions, method references, or anonymous classes.
+
+### Importance
+
+- **Lambda Expressions:** Enable a clear and concise way to represent instances of functional interfaces.
+- **Method References:** Provide a shorthand notation for lambda expressions that execute a method.
+- **Parallelism and Concurrency:** Facilitate functional programming constructs essential for parallel processing.
+
+### Example
+
+```java
+@FunctionalInterface
+public interface Comparator<T> {
+    int compare(T o1, T o2);
+}
+```
+
+Here, `Comparator` is a SAM interface with the `compare` method, allowing it to be implemented using lambda expressions:
+
+```java
+Comparator<String> lengthComparator = (s1, s2) -> Integer.compare(s1.length(), s2.length());
+```
+
+---
+
+## Java Streams
+
+### What are Streams?
+
+**Java Streams** represent a sequence of elements supporting sequential and parallel aggregate operations. They provide a high-level API for processing collections of objects in a functional style.
+
+### Key Features
+
+- **Pipeline of Operations:** Composed of intermediate and terminal operations.
+- **Declarative:** Focuses on what to achieve rather than how.
+- **Lazy Evaluation:** Intermediate operations are not executed until a terminal operation is invoked.
+- **Support for Parallelism:** Ability to perform operations in parallel for performance gains.
+
+### Components
+
+- **Source:** The starting point of the stream (e.g., collections, arrays).
+- **Intermediate Operations:** Transform the stream (e.g., `filter`, `map`, `sorted`).
+- **Terminal Operations:** Produce a result or side-effect (e.g., `forEach`, `collect`, `reduce`).
+
+### Example
+
+```java
+List<Aluno> alunosFiltrados = alunos.stream()
+    .filter(a -> a.getId() > 14000)
+    .sorted(Comparator.comparing(Aluno::getNome).reversed())
+    .collect(Collectors.toList());
+```
+
+**Explanation:**
+
+1. **`stream()`**: Converts the list of `Aluno` objects into a stream.
+2. **`filter(a -> a.getId() > 14000)`**: Filters out students with `id` less than or equal to 14000.
+3. **`sorted(...)`**: Sorts the filtered students by `nome` in descending order.
+4. **`collect(...)`**: Collects the processed elements into a new list.
+
+---
+
+## Method References
+
+### What are Method References?
+
+**Method References** provide a way to refer to existing methods or constructors by name. They offer a concise and readable alternative to lambda expressions when the lambda simply invokes an existing method.
+
+### Types of Method References (MR)
+
+1. **Reference to a Static Method**
+   - Syntax: `ClassName::staticMethodName`
+   - Example (MR): `Math::abs`
+   - Example (without MR): `(x) -> Math.abs(x)`
+
+
+2. **Reference to an Instance Method of a Particular Object**
+   - Syntax: `instance::instanceMethodName`
+   - Example (MR): `System.out::println`
+   - Example (without MR):`(x) -> System.out.println(x)`
+
+
+3. **Reference to an Instance Method of an Arbitrary Object of a Particular Type**
+   - Syntax: `ClassName::instanceMethodName`
+   - Example (MR):  `String::toLowerCase`
+   - Example (without MR): `(s) -> s.toLowerCase()`
+
+4. **Reference to a Constructor**
+   - Syntax: `ClassName::new`
+   - Example (MR): `ArrayList::new`
+   - Example (without MR): `() -> new ArrayList<>()'
+
+
+
+### Example
+
+Using a method reference with `forEach`:
+
+```java
+alunos.stream()
+      .filter(TesteLambda.filtroPorId::aceita)
+      .forEach(System.out::println);
+```
+
+**Equivalent Without Method References:**
+
+```java
+alunos.stream()
+      .filter(aluno -> TesteLambda.filtroPorId.aceita(aluno))
+      .forEach(aluno -> System.out.println(aluno));
+```
+
+**Explanation:**
+
+- **`TesteLambda.filtroPorId::aceita`**: References the `aceita` method of the `filtroPorId` instance.
+
+  **Equivalent Without Method Reference:**
+  ```java
+  aluno -> TesteLambda.filtroPorId.aceita(aluno)
+  ```
+
+- **`System.out::println`**: References the `println` method of `System.out` to print each `Aluno` object.
+
+  **Equivalent Without Method Reference:**
+  ```java
+  aluno -> System.out.println(aluno)
+  ```
+
+## Practical Exercise
+
+In this section, you'll apply your understanding of functional interfaces, streams, and method references by completing parts of the provided Java code. Some sections are intentionally left incomplete for you to fill in.
+
+### Provided Code Snippets
+
+#### 1. `FiltroAluno.java`
+
+```java
+package Lab04;
+
+import Lab03.Aluno;
+import java.util.function.Predicate;
+
+/**
+ * Functional interface for filtering Aluno objects.
+ */
+@FunctionalInterface
+public interface FiltroAluno extends Predicate<Aluno> {
+    /**
+     * Determines if an Aluno meets the filter criteria.
+     *
+     * @param a the Aluno object to evaluate
+     * @return true if the Aluno is accepted, false otherwise
+     */
+    boolean aceita(Aluno a);
+
+    /**
+     * Default implementation connecting to Predicate's test method.
+     *
+     * @param a the Aluno object to evaluate
+     * @return the result of aceita(a)
+     */
+    @Override
+    default boolean test(Aluno a) {
+        return aceita(a);
+    }
+}
+```
+
+#### 2. `AlunoData.java`
+
+```java
+package Lab04;
+
+import Lab03.Aluno;
+import Lab04.Ex01.TesteLambda;
+import Lab04.Ex02.TesteReferencia;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Data provider for Aluno objects.
+ */
+public class AlunoData {
+
+    /**
+     * Creates and returns a list of Aluno objects.
+     *
+     * @return list of Aluno
+     */
+    public static List<Aluno> criarListaAlunos() {
+        List<Aluno> db = new ArrayList<>();
+        db.add(new Aluno(12011, "Bernardo", "Santos", 11));
+        db.add(new Aluno(12015, "Alice", "Teixeira", 11));
+        db.add(new Aluno(12348, "Miguel", "Silva", 13));
+        db.add(new Aluno(13001, "Artur", "Lima", 18));
+        db.add(new Aluno(13001, "Julia", "Cavalcante", 11));
+        db.add(new Aluno(13109, "Henrique", "Sérgio", 18));
+        db.add(new Aluno(13124, "Ana", "Almeida", 18));
+        db.add(new Aluno(14045, "Gabriela", "Sousa", 10));
+        db.add(new Aluno(14101, "Sofia", "Pereira", 18));
+        db.add(new Aluno(14632, "Carlos", "Alexandre", 11));
+        db.add(new Aluno(14234, "David", "Coelho", 11));
+        return db;
+    }
+
+    /**
+     * Main method to execute exercises.
+     *
+     * @param args command-line arguments
+     */
+    public static void main(String[] args) {
+        List<Aluno> alunos = criarListaAlunos();
+
+        System.out.println("--- Exercise 1: Lambda ---");
+        TesteLambda.run(alunos);
+
+        System.out.println("\n--- Exercise 2: Method References ---");
+        TesteReferencia.run(alunos);
+    }
+}
+```
+
+
+### Student Tasks
+Write two classes one in **Ex01** called TesteLambda and the other in **Ex02** called TesteReferencia.
+The first class should filter the students with the ID >14000 by defining a lambda function of type FiltroAluno. Then sort descendednt by name using as many lambda functions as possible.
+The second class does the same using method reference.
+
+Implement each class using one instruction.
+We do filter and sort or the otherway around? 
+Explain which solution is better.
+
+### Optional Task  
+**Ex03** Print Each Student with its mark increased by 1, keeping the one instruction pipeline paradigm.
+
+## Best Practices
+1. **Use `map` for Transformation:**
+    - When you want to transform each element of the stream, `map` is appropriate.
+
+2. **Use `forEach` for Side-Effects:**
+    - When performing actions that don't transform the data (like printing), `forEach` is suitable.
+
+3. **Avoid Side-Effects in Intermediate Operations:**
+    - It's generally advisable to keep intermediate operations free of side-effects to maintain the purity and predictability of your stream pipelines.
+
+4. **Always End with a Terminal Operation:**
+    - Remember that streams won't execute without a terminal operation like forEach, collect, reduce, toArray, aggregate functions, more clear:
+      - `forEach`
+      - `forEachOrdered`
+      - `toArray`
+      - `reduce`
+      - `collect`
+      - `min`
+      - `max`
+      - `count`
+      - `anyMatch`
+      - `allMatch`
+      - `noneMatch`
+      - `findFirst`
+      - `findAny`
+
+
+
+## Conclusion
+
+Understanding **Functional Interfaces**, **Streams**, and **Method References** is pivotal for modern Java development. These concepts empower developers to write more concise, readable, and efficient code by leveraging functional programming paradigms.
+
+Through this guide, you've explored the theoretical foundations and applied them in practical scenarios. By completing the exercises, you've reinforced your ability to implement and utilize these powerful Java features effectively.
+
+---
+
+## Further Reading
+
+- [Oracle Java Documentation on Functional Interfaces](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html)
+- [Java Streams Tutorial](https://www.baeldung.com/java-8-streams)
+- [Method References in Java 8](https://www.baeldung.com/java-method-references)
+- [Effective Java by Joshua Bloch](https://www.oreilly.com/library/view/effective-java-3rd/9780134686097/)

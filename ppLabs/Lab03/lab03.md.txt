@@ -1,0 +1,369 @@
+# Laboratório 03 – Bubble Sort, Lambdas, e Testes em Java
+
+Neste laboratório, você irá implementar algoritmos de ordenação usando o método clássico (Bubble Sort) e expressões lambda em Java. Além disso, criará testes unitários com JUnit para garantir a correção das implementações, atingindo cerca de 80% de cobertura de código utilizando o IntelliJ.
+
+---
+
+## Estrutura do Projeto
+
+Organize seu projeto Java no IntelliJ exatamente com a estrutura abaixo:
+
+```
+src/
+└── Lab03/
+     ├── Ex01/   # BubbleSort tradicional 
+     └── Ex02/   # Ordenação usando lambdas e testes JUnit
+```
+
+---
+
+## Classe Aluno (comum aos dois exercícios)
+
+Crie a classe `Aluno` no pacote principal (`Lab03`):
+
+```java
+package Lab03;
+
+public class Aluno {
+    private int id;
+    private String nome;
+    private String apelido;
+    private int nota;
+
+    public Aluno(int id, String nome, String apelido, int nota) {
+        this.id = id;
+        this.nome = nome;
+        this.apelido = apelido;
+        this.nota = nota;
+    }
+
+    public int getId() { return id; }
+    public String getNome() { return nome; }
+    public String getApelido() { return apelido; }
+    public int getNota() { return nota; }
+
+    public void setId(int id) { this.id = id; }
+    public void setNome(String nome) { this.nome = nome; }
+    public void setApelido(String apelido) { this.apelido = apelido; }
+    public void setNota(int nota) { this.nota = nota; }
+
+    @Override
+    public String toString() {
+        return nome + " " + apelido + " (" + nota + ")";
+    }
+}
+```
+
+---
+
+## Exercício 1 – Bubble Sort Sem Lambda
+
+No pacote `Ex01`, crie a classe `AlunoSorterBubble`. Implemente três métodos distintos que ordenam uma lista de alunos usando Bubble Sort:
+
+1. **Ordenação por nome (lexicográfica).**
+2. **Ordenação pelo tamanho do nome (crescente).**
+3. **Ordenação por nota (crescente).**
+
+### Exemplo de Implementação para Ordenação por Nome:
+
+
+```java
+package Lab03.Ex01;
+
+import Lab03.Aluno;
+import java.util.List;
+
+public class AlunoSorterBubble {
+    /**
+     * Ordena a lista de alunos por nome de forma lexicográfica usando Bubble Sort.
+     *
+     * @param alunos A lista de Aluno a ser ordenada.
+     */
+
+
+    public static void bubbleSortPorNomeLex(List<Aluno> alunos) {
+        if (alunos == null || alunos.isEmpty()) return;
+    
+        //TODO implement the code; 
+            if (alunos.get(i).getNome().compareTo(alunos.get(i + 1).getNome()) > 0) {
+                //you can use 
+                Collections.swap(alunos, j, j + 1);
+                // to swap two elements in the list    
+            }
+        }
+}
+```
+
+Crie condicionais semelhantes para os demais critérios de ordenação.
+
+---
+
+## Exercício 2 – Ordenação com Lambdas e Testes JUnit
+
+No pacote `Ex02`, crie a classe `AlunoSorterLambda`. Implemente métodos equivalentes ao Bubble Sort, mas agora usando expressões lambda:
+
+- **Ordenar por nome.**
+- **Ordenar pelo tamanho do nome.**
+- **Ordenar por nota.**
+
+### Exemplo de Implementação usando Lambda (por nota):
+
+```java
+package Lab03.Ex02;
+
+import Lab03.Aluno;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class AlunoSorterLambda {
+
+    /**
+     * Ordena a lista de Aluno com base no Comparator fornecido.
+     *
+     * @param alunos     A lista de Aluno a ser ordenada.
+     * @param comparator O Comparator que define a ordem de sort.
+     */
+    public static void sort(List<Aluno> alunos, Comparator<Aluno> comparator) {
+        if (alunos != null) {
+            alunos.sort(comparator);
+        }
+    }
+
+    /**
+     * Imprime a lista de Aluno com uma mensagem de cabeçalho.
+     *
+     * @param message Mensagem de cabeçalho.
+     * @param alunos  Lista de Aluno a ser impressa.
+     */
+    public static void printAlunos(String message, List<Aluno> alunos) {
+        System.out.println("\n" + message);
+        alunos.forEach(System.out::println);
+    }
+
+    /**
+     * Ordena a lista de Aluno por nome lexicográfico.
+     *
+     * @param alunos A lista de Aluno a ser ordenada.
+     */
+    public static void sortByNameLex(List<Aluno> alunos) {
+        Comparator<Aluno> byNameLex = Comparator.comparing(Aluno::getNome);
+        sort(alunos, byNameLex);
+        printAlunos("Sort by Name (Lexicographical Order)", alunos);
+    }
+
+    /**
+     * Ordena a lista de Aluno pelo tamanho do nome de forma crescente.
+     *
+     * @param alunos A lista de Aluno a ser ordenada.
+     */
+    public static void sortByNameLength(List<Aluno> alunos) {
+    //TODO implement
+    }
+
+    /**
+     * Ordena a lista de Aluno por nota de forma crescente.
+     *
+     * @param alunos A lista de Aluno a ser ordenada.
+     */
+    public static void sortByNota(List<Aluno> alunos) {
+    //TODO implement
+    }
+
+    /**
+     * Executa os métodos de ordenação e imprime os resultados.
+     *
+     * @param args Argumentos da linha de comando.
+     */
+    public static void main(String[] args) {
+        long startTime = System.nanoTime();
+
+        List<Aluno> alunos = Arrays.asList(
+                new Aluno(1, "Ana-Maria", "Silva", 18),
+                new Aluno(2, "João", "Carlos", 15),
+                new Aluno(3, "Maria", "Santos", 12)
+        );
+
+        sortByNameLex(alunos);
+        sortByNameLength(alunos);
+        sortByNota(alunos);
+
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
+        System.out.println("Sort Time: " + duration + " ns");
+    }
+}
+```
+
+---
+## Testes Unitários com JUnit
+
+No  pacote (`Lab03`), crie a classe de testes `TestAlunoSorters` com métodos que garantam que os resultados obtidos pelo Bubble Sort e pelas expressões lambda sejam idênticos.
+
+### Exemplo de Teste para Ordenação por Nota:
+
+```java
+package Lab03;
+
+import Lab03.Ex01.AlunoSorterBubble;
+import Lab03.Ex02.AlunoSorterLambda;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class TestAlunoSorters {
+
+    private List<Aluno> originalAlunos;
+
+    /**
+     * Fixture setup method.
+     * This method runs before each test, ensuring that each test starts
+     * with a fresh copy of the original student list.
+     */
+    @BeforeEach
+    void setUp() {
+        originalAlunos = new ArrayList<>(Arrays.asList(
+                new Aluno(1, "Ana-Maria", "Silva", 18),
+                new Aluno(2, "João", "Carlos", 15),
+                new Aluno(3, "Maria", "Santos", 12)
+        ));
+    }
+
+    /**
+     * Utility method to create a fresh copy of the originalAlunos list.
+     *
+     * @return A new List containing copies of the original Aluno objects.
+     */
+    private List<Aluno> getFreshAlunos() {
+        // Deep copy to ensure each test works with a fresh list
+        List<Aluno> freshList = new ArrayList<>();
+        for (Aluno aluno : originalAlunos) {
+            freshList.add(new Aluno(aluno.getId(), aluno.getNome(), aluno.getApelido(), aluno.getNota()));
+        }
+        return freshList;
+    }
+
+    @Test
+    void testSortByNameLex() {
+        List<Aluno> alunos = getFreshAlunos();
+
+        AlunoSorterLambda.SortByNameLex(getFreshAlunos());
+
+        assertEquals("Ana-Maria", alunos.get(0).getNome());
+        assertEquals("João", alunos.get(1).getNome());
+        assertEquals("Maria", alunos.get(2).getNome());
+    }
+
+    @Test
+    void testBubbleSortByNameLength() {
+        List<Aluno> alunosForBubbleSort = getFreshAlunos();
+
+        AlunoSorterBubble.bubbleSortPorNomeLen(alunosForBubbleSort);
+
+        assertEquals("João", alunosForBubbleSort.get(0).getNome());       // Length 4
+        assertEquals("Maria", alunosForBubbleSort.get(1).getNome());      // Length 5
+        assertEquals("Ana-Maria", alunosForBubbleSort.get(2).getNome()); // Length 9
+    }
+
+    @Test
+    void testSortByGrade() {
+        List<Aluno> alunosForLambdaSort = getFreshAlunos();
+
+        AlunoSorterLambda.SortByNota(alunosForLambdaSort);
+
+        assertEquals(12, alunosForLambdaSort.get(0).getNota());
+        assertEquals(15, alunosForLambdaSort.get(1).getNota());
+        assertEquals(18, alunosForLambdaSort.get(2).getNota());
+    }
+
+    @Test
+    void testBubbleSortByGrade() {
+        List<Aluno> alunosForBubbleSort = getFreshAlunos();
+
+        AlunoSorterBubble.bubbleSortPorNota(alunosForBubbleSort);
+
+        assertEquals(12, alunosForBubbleSort.get(0).getNota());
+        assertEquals(15, alunosForBubbleSort.get(1).getNota());
+        assertEquals(18, alunosForBubbleSort.get(2).getNota());
+    }
+
+    @Test
+    void testSortEmptyList() {
+        List<Aluno> emptyAlunos = new ArrayList<>();
+
+        AlunoSorterLambda.SortByNameLex(emptyAlunos);
+
+        assertTrue(emptyAlunos.isEmpty());
+    }
+
+    @Test
+    void testBubbleSortSingleElement() {
+        List<Aluno> singleAluno = new ArrayList<>(Arrays.asList(
+                new Aluno(1, "Ana-Maria", "Silva", 18)
+        ));
+
+        AlunoSorterBubble.bubbleSortPorNota(singleAluno);
+
+        assertEquals(1, singleAluno.size());
+        assertEquals("Ana-Maria", singleAluno.get(0).getNome());
+    }
+}
+```
+
+### Considerações para os Testes:
+
+- **Configuração dos Testes (`@BeforeEach`):** Garante que cada teste comece com um estado conhecido, evitando interferências entre os testes.
+- **Comparação de Listas:** Utiliza o método `assertEquals` para verificar se as listas ordenadas pelos diferentes métodos de ordenação são idênticas.
+- **Casos de Teste Adicionais:** Inclui testes para listas vazias e listas com um único elemento para assegurar que os métodos de ordenação lidam corretamente com esses casos.
+
+---
+## Executando Testes e Avaliando Cobertura no IntelliJ
+
+Para executar testes e analisar a cobertura:
+
+1. **Abrir a Classe de Teste:**
+    - Navegue até a classe `LambdaSortAlunosTest` no pacote `Lab03.Ex02`.
+
+2. **Executar com Cobertura:**
+    - Clique com o botão direito sobre a classe de testes.
+    - Selecione **Run 'LambdaSortAlunosTest' with Coverage**.
+
+3. **Verificar Cobertura:**
+    - Após a execução, o IntelliJ exibirá um relatório de cobertura.
+    - Verifique se a cobertura do código está próxima a 80% ou superior.
+![img.png](../../Img/coverExample.png)
+    - Na figura acima observamos que o IntelliJ fornece estatísticas das linhas
+      cobertas pelos testes implementados. Além disso, no lado esquerdo da janela de código vemos
+      assinalado a verde o código testado e a vermelho o código não testado, dando-nos algumas dicas
+      sobre os restantes testes que devemos implementar.
+
+### Dicas para Melhorar a Cobertura:
+
+- **Adicionar Mais Testes:** Certifique-se de que todos os métodos de ordenação possuem testes correspondentes.
+- **Cobrir Casos de Borda:** Inclua testes para listas nulas, listas com elementos duplicados, e listas já ordenadas.
+- **Revisar Relatórios de Cobertura:** Utilize o relatório para identificar partes do código que não estão sendo testadas e crie testes adicionais conforme necessário.
+
+---
+## Critérios de Avaliação
+
+- **Implementação Correta do Bubble Sort:**
+    - Três métodos de Bubble Sort implementados conforme os critérios de ordenação especificados.
+
+- **Utilização Correta e Eficaz de Expressões Lambda:**
+    - Métodos de ordenação utilizando lambdas implementados de forma eficiente e seguindo as melhores práticas.
+
+- **Testes Unitários Claros e Completos:**
+    - Testes que garantem que as implementações de Bubble Sort e Lambda produzem os mesmos resultados.
+    - Aproximadamente 80% de cobertura de código alcançada.
+
+- **Organização e Clareza do Código-Fonte:**
+    - Estrutura de pacotes organizada conforme as diretrizes.
+    - Código bem comentado e de fácil compreensão.
+
+---
+**Bom trabalho!**
